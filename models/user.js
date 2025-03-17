@@ -10,4 +10,4 @@ const expenseSchema = new Schema(
   { timestamps: true }
 );
 
-export const ExpenseModel = model("Expense", expenseSchema);
+export const UserModel = model("Expense", expenseSchema);
