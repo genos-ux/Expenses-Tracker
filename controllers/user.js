@@ -1,5 +1,8 @@
 import { UserModel } from "../models/user.js";
 import jwt from "jsonwebtoken";
+import { userValidator } from "../validators/user.js";
+import bcrypt from 'bcrypt';
+import config from '../config.js';
 
 export const registerUser = async (req, res) => {
   // Validate the data.
@@ -22,7 +25,7 @@ export const registerUser = async (req, res) => {
     const hashedPassword = await bcrypt.hash(value.password, 12);
     // const newUser = await User.create(...value, value.password=hashedPassword);
 
-    const newUser = await User.create({
+    const newUser = await UserModel.create({
       userName: value.userName,
       email: value.email,
       password: hashedPassword,
@@ -35,21 +38,23 @@ export const registerUser = async (req, res) => {
 };
 
 export const loginUser = async(req,res) => {
-    const { error, value } = userValidator.validate(req.body);
+    // const { error, value } = userValidator.validate(req.body);
 
-    if(error)
-    {
-        res.status(400).json({message: error.details[0].message});
-    }
+    // if(error)
+    // {
+    //     res.status(400).json({message: error.details[0].message});
+    // }
 
-    const user = await UserModel.findOne({email: value.email});
+    const {password,email} = req.body;
+
+    const user = await UserModel.findOne({email});
 
     if(!user)
     {
       res.status(401).json({message: 'Email or password is invalid.'});
     }
 
-    const passwordMatch = await bcrypt.compare(value.password,user.password);
+    const passwordMatch = await bcrypt.compare(password,user.password);
 
     if(!passwordMatch)
     {
