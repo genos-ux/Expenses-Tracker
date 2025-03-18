@@ -2,20 +2,21 @@ import express from 'express';
 import mongoose from 'mongoose';
 import 'dotenv/config';
 import expensesRouter from './routes/expenses.js';
+import authRouter from './routes/auth.js';
 
 const app = express();
 
+// Database connection
 mongoose.connect(process.env.MONGO_URL)
 .then(()=> console.log('Database connected'))
 .catch(err => console.log(err));
 
-app.get('/',(req,res)=>{
-    res.send("hello world");
-})
-
+// Body parser
 app.use(express.json());
 
-app.use(expensesRouter);
+// Routes middlewares
+app.use('/api/v1/',authRouter);
+app.use('/api/v1',expensesRouter);
 
 
 app.listen(3200, ()=> {

@@ -1,11 +1,13 @@
 import { Router } from "express";
-import { Register} from "../controllers/expenses.js";
+import { addExpenses, deleteExpense, getExpenses} from "../controllers/expenses.js";
 
 // Create products router
 const expensesRouter = Router();
 
 // Define routes
-expensesRouter.post('/events/register',Register);
+expensesRouter.post('/expenses',addExpenses);
+expensesRouter.get('/expenses/',getExpenses);
+expensesRouter.delete('/expenses/:id',deleteExpense);
 
 
 // Export router

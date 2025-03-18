@@ -1,13 +1,12 @@
 import { Schema, model } from "mongoose";
 
-const expenseSchema = new Schema(
+const userSchema = new Schema(
   {
     userName: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     email: { type: String, required: true },
-    
   },
-  { timestamps: true }
+  {timestamps: true}
 );
 
-export const UserModel = model("Expense", expenseSchema);
+export const UserModel = model("User", userSchema);

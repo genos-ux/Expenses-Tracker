@@ -1,11 +1,11 @@
-import { ExpenseModel } from "../models/user.js";
+import { ExpenseModel } from "../models/expenses.js";
 
 export const addExpenses = async(req,res)=> {
     // const {amount,category,date} = req.body;
 
     const expense = await ExpenseModel.create(req.body);
 
-    res.status(201).json({message: 'Expense created.'})
+    res.status(201).json(expense);
 }
 
 export const getExpenses = async(req,res) => {

@@ -1,4 +1,5 @@
 import { UserModel } from "../models/user.js";
+import jwt from "jsonwebtoken";
 
 export const registerUser = async (req, res) => {
   // Validate the data.
@@ -29,17 +30,42 @@ export const registerUser = async (req, res) => {
 
     return res
       .status(201)
-      .json({ message: "User created successfully", data: newUser });
+      .json({ message: "User registered successfully", data: newUser });
   }
 };
 
-export const loginUser = (req,res) => {
+export const loginUser = async(req,res) => {
     const { error, value } = userValidator.validate(req.body);
 
     if(error)
     {
         res.status(400).json({message: error.details[0].message});
     }
+
+    const user = await UserModel.findOne({email: value.email});
+
+    if(!user)
+    {
+      res.status(401).json({message: 'Email or password is invalid.'});
+    }
+
+    const passwordMatch = await bcrypt.compare(value.password,user.password);
+
+    if(!passwordMatch)
+    {
+      return res.status(401).json({message: 'Email or password is invalid.'});
+    }
+
+    const accessToken = jwt.sign({userId: user._id},config.accessToken,{subject:'accessApi',expiresIn: '1d'});
+
+    return res.status(200).json({
+      id: user._id,
+      userName: user.userName,
+      email: user.email,
+      accessToken
+    })
+
+
 
 
 }
